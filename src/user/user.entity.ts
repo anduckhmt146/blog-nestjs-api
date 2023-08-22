@@ -11,7 +11,7 @@ import { hash } from 'bcrypt';
 @Entity({ name: 'user' })
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column({ default: '' })
   bio: string;

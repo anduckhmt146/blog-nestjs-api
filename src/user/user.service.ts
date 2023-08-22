@@ -16,6 +16,12 @@ export class UserService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
+    if (!createUserDto) {
+      throw new HttpException(
+        'Token is missing or request data is null',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
     const findUserByEmail = await this.userRepository.findOne({
       where: { email: createUserDto.email },
     });
@@ -35,6 +41,12 @@ export class UserService {
   }
 
   async loginUser(loginUserDto: LoginUserDto): Promise<UserEntity> {
+    if (!loginUserDto) {
+      throw new HttpException(
+        'Token is missing or request data is null',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
     const user = await this.userRepository.findOne({
       where: { username: loginUserDto.username },
       select: ['id', 'username', 'email', 'bio', 'image', 'password'],
@@ -72,5 +84,27 @@ export class UserService {
         token: this.generateJwtToken(user),
       },
     };
+  }
+  async findUserById(userID: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({
+      where: { id: userID },
+    });
+    return user;
+  }
+  async getAllUser(): Promise<UserEntity[]> {
+    const users = await this.userRepository.find();
+    return users;
+  }
+  async updateUserById(
+    userID: string,
+    updateUser: UserEntity,
+  ): Promise<UserEntity> {
+    const user = await this.findUserById(userID);
+    Object.assign(user, updateUser);
+    return await this.userRepository.save(user);
+  }
+  async deleteUserById(userID: string): Promise<UserEntity> {
+    const user = await this.findUserById(userID);
+    return await this.userRepository.remove(user);
   }
 }
