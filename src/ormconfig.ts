@@ -5,7 +5,7 @@ const ormconfig: PostgresConnectionOptions = {
     host: "localhost",
     port: 5432,
     username: "postgres",
-    password: "tinhban123",
+    password: "secret",
     database: "blog",
     entities: [__dirname + "/**/*.entity{.ts,.js}"],
     synchronize: false,
